@@ -8,17 +8,17 @@ using namespace std;
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "libmysql.lib")
 
-#define H_count 20 //µÃµ½µÄÑµÁ·Êı¾İÌõÊı/ĞĞÊı
-#define L_count 8 //ÑµÁ·Êı¾İÁĞÊı
-#define SUIJI_CNT 1 //ÊÇ[1]¡¤·ñ[0]Ëæ»úÉú³ÉÑùÀı
-#define FLAG_hidden 0//ÏÔÊ¾Ï¸½Ú[1]¡¤»ò¡¤Òş²Ø[0]
+#define H_count 20 //å¾—åˆ°çš„è®­ç»ƒæ•°æ®æ¡æ•°/è¡Œæ•°
+#define L_count 8 //è®­ç»ƒæ•°æ®åˆ—æ•°
+#define SUIJI_CNT 1 //æ˜¯[1]Â·å¦[0]éšæœºç”Ÿæˆæ ·ä¾‹
+#define FLAG_hidden 0//æ˜¾ç¤ºç»†èŠ‚[1]Â·æˆ–Â·éšè—[0]
  
 MYSQL mydata; 
-string traindata[H_count][L_count]; //½á¹û¼¯´æÖü
-string newdata[1][L_count]; //ĞÂÑùÀı´æ´¢
-string xindata[100][10]; //Í¬ÉÏ
-string classes[100]; //·ÖÀàÈ«²¿Àà±ğ
-int class_num; //·ÖÀàÀàÊı
+string traindata[H_count][L_count]; //ç»“æœé›†å­˜è´®
+string newdata[1][L_count]; //æ–°æ ·ä¾‹å­˜å‚¨
+string xindata[100][10]; //åŒä¸Š
+string classes[100]; //åˆ†ç±»å…¨éƒ¨ç±»åˆ«
+int class_num; //åˆ†ç±»ç±»æ•°
 string yes ; 
 string no ;
 
@@ -35,7 +35,7 @@ int sql_read();
 
 int sql_line()
 {
-   //³õÊ¼»¯Êı¾İ¿â
+   //åˆå§‹åŒ–æ•°æ®åº“
     if (0 == mysql_library_init(0, NULL, NULL)) {
         cout << "mysql_library_init() succeed" << endl;    
 	} 
@@ -44,7 +44,7 @@ int sql_line()
         return -1;
 	}
     
-    if (NULL != mysql_init(&mydata)) {//³õÊ¼»¯Êı¾İ½á¹¹
+    if (NULL != mysql_init(&mydata)) {//åˆå§‹åŒ–æ•°æ®ç»“æ„
         cout << "mysql_init() succeed" << endl;
     } 
 	else {
@@ -76,7 +76,7 @@ int sql_read()
 {
 	string str;   
 		
-    str = "SELECT * FROM n_e_w;";  /////////////////////////»»±íÔÚ´Ë////////////´ËÑµÁ·Êı¾İ±í×Ô¶¯³¤¶È/////////////////
+    str = "SELECT * FROM n_e_w;";  /////////////////////////æ¢è¡¨åœ¨æ­¤////////////æ­¤è®­ç»ƒæ•°æ®è¡¨è‡ªåŠ¨é•¿åº¦/////////////////
     MYSQL_RES *result1 = NULL;
     if (0 == mysql_query(&mydata, str.c_str())) 
 	{
@@ -84,8 +84,8 @@ int sql_read()
         cout << "-----------------------------------------------------------" << endl;
         result1 = mysql_store_result(&mydata);  
         int rowcount1 = mysql_num_rows(result1);
-        cout << "ÑµÁ·Êı¾İ¼ÇÂ¼Êı£º " << rowcount1 << endl;     
-        unsigned int fieldcount1 = mysql_num_fields(result1);  //È¡µÃ²¢´òÓ¡¸÷×Ö¶ÎµÄÃû³Æ
+        cout << "è®­ç»ƒæ•°æ®è®°å½•æ•°ï¼š " << rowcount1 << endl;     
+        unsigned int fieldcount1 = mysql_num_fields(result1);  //å–å¾—å¹¶æ‰“å°å„å­—æ®µçš„åç§°
         MYSQL_ROW row1 = NULL;
         row1 = mysql_fetch_row(result1);
 		for(int j=0;j<rowcount1;j++){classes[j]=' ';}
@@ -112,7 +112,7 @@ int sql_read()
 			}
 			if(flag) class_num++;
 		}
-cout<<"ÑµÁ·Êı¾İµÄÀà±ğÊı£º"<< class_num<<endl;	
+cout<<"è®­ç»ƒæ•°æ®çš„ç±»åˆ«æ•°ï¼š"<< class_num<<endl;	
     } 
 
 	else 
@@ -132,13 +132,13 @@ void classes_strategy()
 {
 	int n,num=0;
 	float aa=0,bb=0,cc=0,x=0,y=0;
-    char a[20],A[100]={0},B[100]={0},max_result[20]={0}; //A[]ÊÇ²ğ·Ö³ÉµÄÕıÀà±ğ£¬B[]Îª¸ºÀà±ğ£¬max_result[]´æÃ¿´Î¶şÔª·ÖÀàµÄÊ¤³öÀà±ğ
+    char a[20],A[100]={0},B[100]={0},max_result[20]={0}; //A[]æ˜¯æ‹†åˆ†æˆçš„æ­£ç±»åˆ«ï¼ŒB[]ä¸ºè´Ÿç±»åˆ«ï¼Œmax_result[]å­˜æ¯æ¬¡äºŒå…ƒåˆ†ç±»çš„èƒœå‡ºç±»åˆ«
 
-if(FLAG_hidden)cout<<"Àà±ğÊıÁ¿ÒÑ»ñÈ¡..."<<class_num<<endl;
+if(FLAG_hidden)cout<<"ç±»åˆ«æ•°é‡å·²è·å–..."<<class_num<<endl;
 
 	n = class_num;
 
-if(FLAG_hidden)cout<<"Àà±ğÃû³ÆÒÑ»ñÈ¡...\n"<<endl;
+if(FLAG_hidden)cout<<"ç±»åˆ«åç§°å·²è·å–...\n"<<endl;
 
 	for(int i=0;i<n;i++)a[i]='0'+(i+1);
 
@@ -157,17 +157,17 @@ if(FLAG_hidden)cout<<"Àà±ğÃû³ÆÒÑ»ñÈ¡...\n"<<endl;
 if(FLAG_hidden)cout<<A[i]<<" "<<B[i]<<endl;
 		yes=A[i];
 		no=B[i];
-		classes_method(x,y);                 //µ÷ÓÃclasses_method()¼ÆËã¸ÅÂÊ
+		classes_method(x,y);                 //è°ƒç”¨classes_method()è®¡ç®—æ¦‚ç‡
  
-if(FLAG_hidden)cout<<"¶şÔª£º"<<yes<<"Óë"<<no<<"  ºóÑé¸ÅÂÊÎª [ "<<x<<" ] [ "<<y<<" ]";	
+if(FLAG_hidden)cout<<"äºŒå…ƒï¼š"<<yes<<"ä¸"<<no<<"  åéªŒæ¦‚ç‡ä¸º [ "<<x<<" ] [ "<<y<<" ]";	
 
 		if(x>y) {
-			max_result[i]=A[i];if(FLAG_hidden)cout<<" Ê¤³ö->"<<A[i]<<endl;}    //°Ñ¶şÔª·ÖÀà½á¹ûµÄÊ¤³ö·½ ¸ømax_result[]
+			max_result[i]=A[i];if(FLAG_hidden)cout<<" èƒœå‡º->"<<A[i]<<endl;}    //æŠŠäºŒå…ƒåˆ†ç±»ç»“æœçš„èƒœå‡ºæ–¹ ç»™max_result[]
 		else {
-			max_result[i]=B[i];if(FLAG_hidden)cout<<" Ê¤³ö->"<<B[i]<<endl;}
+			max_result[i]=B[i];if(FLAG_hidden)cout<<" èƒœå‡º->"<<B[i]<<endl;}
 	}
-if(FLAG_hidden)cout<<"\n¸ÅÂÊÒÑ¼ÆËãÍê±Ï...\n";
-    result_process(num,max_result);              //µ÷ÓÃ result_process() ÓÃÍ¶Æ±·¨ÕÒ³ö×îÖÕÀà
+if(FLAG_hidden)cout<<"\næ¦‚ç‡å·²è®¡ç®—å®Œæ¯•...\n";
+    result_process(num,max_result);              //è°ƒç”¨ result_process() ç”¨æŠ•ç¥¨æ³•æ‰¾å‡ºæœ€ç»ˆç±»
 }
 
 /**********************************************************************************************************************/
@@ -177,17 +177,17 @@ void result_process(int num,char *max_result)
 	int i,j,end_class,max=0;
 
 	//for(i=0;i<num;i++) cout<<max_result[i]<<endl;
-if(FLAG_hidden)cout<<"\nÍ¶Æ±½á¹û£º"<<endl;         
-	for(i=0;i<class_num;i++)         //Í¶Æ±¼ÆÊı,È·¶¨Æ±Êı×î¶àµÄÀà±ğ
+if(FLAG_hidden)cout<<"\næŠ•ç¥¨ç»“æœï¼š"<<endl;         
+	for(i=0;i<class_num;i++)         //æŠ•ç¥¨è®¡æ•°,ç¡®å®šç¥¨æ•°æœ€å¤šçš„ç±»åˆ«
 	{
 		int numb=0;
 		for(j=0;j<num;j++) {if(max_result[j]==('0'+i+1)) numb++;}
-if(FLAG_hidden)cout<<"µÚ"<<i+1<<"ÀàÓĞ "<<numb<<"Æ±"<<endl;
+if(FLAG_hidden)cout<<"ç¬¬"<<i+1<<"ç±»æœ‰ "<<numb<<"ç¥¨"<<endl;
 		if(numb > max) {max = numb; end_class = i+1;}
 	}
 
-if(FLAG_hidden)cout<<"++++++++++++++++++++++"<<endl;                              //³ÌĞò³ö¿Ú_Êä³öËùÊôÀà±ğ
-    cout<<"±¾ÑùÀıËùÊôÀà±ğÎª:[ "<<end_class<<" ]"<<endl;               
+if(FLAG_hidden)cout<<"++++++++++++++++++++++"<<endl;                              //ç¨‹åºå‡ºå£_è¾“å‡ºæ‰€å±ç±»åˆ«
+    cout<<"æœ¬æ ·ä¾‹æ‰€å±ç±»åˆ«ä¸º:[ "<<end_class<<" ]"<<endl;               
 if(FLAG_hidden)cout<<"++++++++++++++++++++++++++++++++++"<<endl<<endl;
 }
 
@@ -205,7 +205,7 @@ void classes_method(float &x,float &y)//string traindatag
 
 	float Pyes=countyes/H_count;   
 	float Pno=countno/H_count;  
-if(FLAG_hidden)cout<<"´ËÀàÖĞyesÊÇ"<<yes<<" "<<"noÊÇ"<<no<<endl;   //¼ì²â²ğ·ÖµÄ¶şÔª·ÖÀà  
+if(FLAG_hidden)cout<<"æ­¤ç±»ä¸­yesæ˜¯"<<yes<<" "<<"noæ˜¯"<<no<<endl;   //æ£€æµ‹æ‹†åˆ†çš„äºŒå…ƒåˆ†ç±»  
 if(FLAG_hidden)cout<<"Pyes-> "<<Pyes<<" Pno-> "<<Pno<<endl;
 	float PxIyes=1;
 	float PxIno=1;   
@@ -215,7 +215,7 @@ if(FLAG_hidden)cout<<"Pyes-> "<<Pyes<<" Pno-> "<<Pno<<endl;
 		for(i=0;i<H_count;i++)
 		{
 			if(classes[i]==yes)
-			{      //ÔÚyesµÄÇ°ÌáÏÂ£¬¸÷ÊôĞÔÔÚËù¸øÖµÏÂµÄ¸ÅÂÊ
+			{      //åœ¨yesçš„å‰æä¸‹ï¼Œå„å±æ€§åœ¨æ‰€ç»™å€¼ä¸‹çš„æ¦‚ç‡
 				if(!(traindata[i][k].compare(newdata[0][k])))  cnt_1++;  
 			} 			
 	 		if(classes[i]==no)
@@ -228,11 +228,11 @@ if(FLAG_hidden)cout<<cnt_1<<"  "<<cnt_2<<endl;
 		if(cnt_2) PxIno *= cnt_2/countno;
 	}
 
-if(FLAG_hidden)cout<<"ÔÚyesµÄÇ°ÌáÏÂ£¬¸ÅÂÊ"<<PxIyes<<endl;//ÔÚyesµÄÇ°ÌáÏÂ£¬¸÷ÊôĞÔÔÚËù¸øÖµÏÂµÄ¸ÅÂÊ                                                           
-if(FLAG_hidden)cout<<"ÔÚnoµÄÇ°ÌáÏÂ£¬¸ÅÂÊ"<<PxIno<<endl;                                                                                                    	
+if(FLAG_hidden)cout<<"åœ¨yesçš„å‰æä¸‹ï¼Œæ¦‚ç‡"<<PxIyes<<endl;//åœ¨yesçš„å‰æä¸‹ï¼Œå„å±æ€§åœ¨æ‰€ç»™å€¼ä¸‹çš„æ¦‚ç‡                                                           
+if(FLAG_hidden)cout<<"åœ¨noçš„å‰æä¸‹ï¼Œæ¦‚ç‡"<<PxIno<<endl;                                                                                                    	
 	x=Pyes*PxIyes;  
 	y=Pno*PxIno;     
-    //¿ÉµÃºóÑé¸ÅÂÊP(yes|x)=(px|yes)*p(yes)    
+    //å¯å¾—åéªŒæ¦‚ç‡P(yes|x)=(px|yes)*p(yes)    
 }
 
 /**********************************************************************************************************************/
@@ -244,17 +244,17 @@ if(FLAG_hidden)cout<<"ÔÚnoµÄÇ°ÌáÏÂ£¬¸ÅÂÊ"<<PxIno<<endl;
 int main()
 {
     int count;
-	if(!sql_line()){return 0;}      //µ÷ÓÃsql_line() Íê³ÉÁ¬½ÓÊı¾İ¿â                                                           
-	if(!sql_read()){return 0;}  	//µ÷ÓÃsql_read() ´æ´¢ Í¨¹ı¾ÛÀàËã·¨µÃµ½µÄÑµÁ·Êı¾İ     
+	if(!sql_line()){return 0;}      //è°ƒç”¨sql_line() å®Œæˆè¿æ¥æ•°æ®åº“                                                           
+	if(!sql_read()){return 0;}  	//è°ƒç”¨sql_read() å­˜å‚¨ é€šè¿‡èšç±»ç®—æ³•å¾—åˆ°çš„è®­ç»ƒæ•°æ®     
 
     //**************************************************************************
 
 if(SUIJI_CNT){
-	cout<<"ÊäÈëÉú³ÉÑùÀıÌõÊı£º"; cin>>count;   //ÓÃ»§ÊäÈë Éú³ÉÑùÀıµÄ ÌõÊı
-	cout<<"Éú³ÉÑùÀıÈçÏÂËùÊ¾£º"<<endl;
+	cout<<"è¾“å…¥ç”Ÿæˆæ ·ä¾‹æ¡æ•°ï¼š"; cin>>count;   //ç”¨æˆ·è¾“å…¥ ç”Ÿæˆæ ·ä¾‹çš„ æ¡æ•°
+	cout<<"ç”Ÿæˆæ ·ä¾‹å¦‚ä¸‹æ‰€ç¤ºï¼š"<<endl;
 	cout<<endl;                      
 	
-	mysql_query(&mydata,"truncate table zzz;");  //Ã¿´ÎÇå¿ÕÑùÀıÉú³É±ízzz±ãÓÚÊµÑé
+	mysql_query(&mydata,"truncate table zzz;");  //æ¯æ¬¡æ¸…ç©ºæ ·ä¾‹ç”Ÿæˆè¡¨zzzä¾¿äºå®éªŒ
 
     string sqlstr;   
     sqlstr += "insert into zzz "; 
@@ -267,10 +267,10 @@ if(SUIJI_CNT){
 	sqlstr += "s_two=(SELECT s_two FROM n_e_w ORDER BY RAND() LIMIT 1),";
 	sqlstr += "s_three=(SELECT s_three FROM n_e_w ORDER BY RAND() LIMIT 1)";
 
-    for(int t = 0; t < count ; t++)mysql_query(&mydata,sqlstr.c_str()); //Ëæ»úÉú³ÉcoutÌõÑùÀı
-}else{cout<<"ÑùÀıÒÑ¹Ì¶¨Îª×Ô¶¨Òå...\n";}
+    for(int t = 0; t < count ; t++)mysql_query(&mydata,sqlstr.c_str()); //éšæœºç”Ÿæˆcoutæ¡æ ·ä¾‹
+}else{cout<<"æ ·ä¾‹å·²å›ºå®šä¸ºè‡ªå®šä¹‰...\n";}
 
-	MYSQL_RES *result = NULL; //²éÑ¯È¡Öµ²Ù×÷£¬È¡³öËæ»úÉú³ÉµÄÑùÀı(´æµ½ÁËzzz±íÖĞ)
+	MYSQL_RES *result = NULL; //æŸ¥è¯¢å–å€¼æ“ä½œï¼Œå–å‡ºéšæœºç”Ÿæˆçš„æ ·ä¾‹(å­˜åˆ°äº†zzzè¡¨ä¸­)
     mysql_query(&mydata,"SELECT * FROM zzz");      
     result = mysql_store_result(&mydata);
     int rowcount = mysql_num_rows(result);
@@ -283,7 +283,7 @@ if(SUIJI_CNT){
 		for(int i = 0; i < fieldcount; i++)
 		{
 			xindata[j][i] = row[i];
-			cout<<xindata[j][i] <<"\t";  //Éú³ÉÑùÀı->xindata[]
+			cout<<xindata[j][i] <<"\t";  //ç”Ÿæˆæ ·ä¾‹->xindata[]
 		}	    	 
 	    cout<<endl;
         row = mysql_fetch_row(result);
@@ -291,13 +291,13 @@ if(SUIJI_CNT){
         
      clock_t begin, end;   
  	 double  cost;
-	 begin = clock(); //¼ÆÊ±º¯Êı¿ªÊ¼
+	 begin = clock(); //è®¡æ—¶å‡½æ•°å¼€å§‹
 
-	cout<<"\nÑùÀıÒÑ»ñÈ¡,¿ªÊ¼Öğ¸ö¼ÆËã...\n\n"<<endl;
-	for(int i = 0;i < rowcount;i++) //¶ÔÑùÀı£¬Ñ­»·£¬·ÖÀà
+	cout<<"\næ ·ä¾‹å·²è·å–,å¼€å§‹é€ä¸ªè®¡ç®—...\n\n"<<endl;
+	for(int i = 0;i < rowcount;i++) //å¯¹æ ·ä¾‹ï¼Œå¾ªç¯ï¼Œåˆ†ç±»
 	{
-		for(int k=0;k<L_count;k++){	newdata[0][k]=xindata[i][k];  }  //Éú³ÉÑùÀı->xindata[]->newdata[]	
-		classes_strategy();   //µ÷ÓÃclasses_strategy()½øĞĞ·ÖÀà
+		for(int k=0;k<L_count;k++){	newdata[0][k]=xindata[i][k];  }  //ç”Ÿæˆæ ·ä¾‹->xindata[]->newdata[]	
+		classes_strategy();   //è°ƒç”¨classes_strategy()è¿›è¡Œåˆ†ç±»
 	}
 	end = clock();
     cost = (double)(end - begin) / CLOCKS_PER_SEC;
