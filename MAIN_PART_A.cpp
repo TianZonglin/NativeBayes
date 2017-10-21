@@ -13,9 +13,9 @@
 using namespace std;
 
 
-#define DEFINE_COUNT 200 //Ëæ»úÊı¾İµÄÌõÊı
-#define FLAG_COUNT 1 //Ëæ»úÉú³É[1]¡¤»ò¡¤²»±ä[0]
-#define FLAG_HIDDEN 1 //º¯ÊıÄÚµÄÊä³öÏÔÊ¾[1]¡¤»ò¡¤Òş²Ø[0]
+#define DEFINE_COUNT 200 //éšæœºæ•°æ®çš„æ¡æ•°
+#define FLAG_COUNT 1 //éšæœºç”Ÿæˆ[1]Â·æˆ–Â·ä¸å˜[0]
+#define FLAG_HIDDEN 1 //å‡½æ•°å†…çš„è¾“å‡ºæ˜¾ç¤º[1]Â·æˆ–Â·éšè—[0]
 
 
 int abc(char *s,string a); 
@@ -27,55 +27,55 @@ float S_Value(string classify[200]);
 float Record_Distance(string a,string b,MYSQL mydata_1);   
 float Entropy_calculate(string classify[200],struct Entropy entro[DEFINE_COUNT],string array[200]);
 
-string traindata[200][200]; //´æ´¢ËùÉú³ÉµÄ½á¹û¼¯
-string state_start[50]; //´æ´¢×´Ì¬Æğµã
-string state_end[50]; //´æ´¢×´Ì¬ÖÕµã
-string caution; //ÊäÈë¹Ø×¢¼¶±ğ
-string ; //ÊäÈë¹Ø×¢¼¶±ğ
+string traindata[200][200]; //å­˜å‚¨æ‰€ç”Ÿæˆçš„ç»“æœé›†
+string state_start[50]; //å­˜å‚¨çŠ¶æ€èµ·ç‚¹
+string state_end[50]; //å­˜å‚¨çŠ¶æ€ç»ˆç‚¹
+string caution; //è¾“å…¥å…³æ³¨çº§åˆ«
+string ; //è¾“å…¥å…³æ³¨çº§åˆ«
 
 int merge_cnt;
 int merge_int;
-int T=DEFINE_COUNT; //¶¯Ì¬¾ÛÀàÀà±ğÊıÄ¿ 
-int cnt; //Éú³É×´Ì¬Â·¾¶µÄÊıÄ¿
+int T=DEFINE_COUNT; //åŠ¨æ€èšç±»ç±»åˆ«æ•°ç›® 
+int cnt; //ç”ŸæˆçŠ¶æ€è·¯å¾„çš„æ•°ç›®
 int n;
-int sline; //×´Ì¬µÄÌõÊı
-char array[200][100]; //È«¾ÖÊı×é£¬´æ´¢×´Ì¬Â·¾¶
+int sline; //çŠ¶æ€çš„æ¡æ•°
+char array[200][100]; //å…¨å±€æ•°ç»„ï¼Œå­˜å‚¨çŠ¶æ€è·¯å¾„
 
 struct Statelist {
-    char * start;//Â·¾¶µÄÆğÊ¼µã
-    char * end;//Â·¾¶µÄÖÕÖ¹µã
+    char * start;//è·¯å¾„çš„èµ·å§‹ç‚¹
+    char * end;//è·¯å¾„çš„ç»ˆæ­¢ç‚¹
 };
 struct Statelist List[30]; 
 
 struct Leizu   
 {   
-    string input; //´ËÀà×éµÄinputÖµ   
-    string output; //´ËÀà×éµÄoutputÖµ  
-	string before; //´ËÀà×éµÄbeforeÖµ
-	string after; //´ËÀà×éµÄafterÖµ
-	string state1; //´ËÀà×éµÄs1Öµ
-	string state2; //´ËÀà×éµÄs2Öµ
-	string state3; //´ËÀà×éµÄs3Öµ
-	int classify; //´ËÀà×éµÄÀàºÅÖµ
-    int datenum[DEFINE_COUNT+1]; //´Ë×é°üº¬µÄ¼ÇÂ¼ĞĞºÅ   
-    int counter; //¼ÇÂ¼Êı×éÔªËØ¸öÊı	
+    string input; //æ­¤ç±»ç»„çš„inputå€¼   
+    string output; //æ­¤ç±»ç»„çš„outputå€¼  
+	string before; //æ­¤ç±»ç»„çš„beforeå€¼
+	string after; //æ­¤ç±»ç»„çš„afterå€¼
+	string state1; //æ­¤ç±»ç»„çš„s1å€¼
+	string state2; //æ­¤ç±»ç»„çš„s2å€¼
+	string state3; //æ­¤ç±»ç»„çš„s3å€¼
+	int classify; //æ­¤ç±»ç»„çš„ç±»å·å€¼
+    int datenum[DEFINE_COUNT+1]; //æ­¤ç»„åŒ…å«çš„è®°å½•è¡Œå·   
+    int counter; //è®°å½•æ•°ç»„å…ƒç´ ä¸ªæ•°	
 };   
 struct Leizu lei[DEFINE_COUNT+1];  
 
 
 struct Entropy   
 {   
-    string ab_name[DEFINE_COUNT]; //´ú±í´Ë'ÊôĞÔ'µÄÖµ
-	string c_lei[DEFINE_COUNT]; //´ú±í´Ë'ÊôĞÔ'ÖµµÄÀà±ğ
-    int o_num[DEFINE_COUNT+1]; //¼ÇÂ¼´Ë'ÊôĞÔ'¸öÊı  
-	int g_count; //¼ÇÂ¼´Ë'ÊôĞÔ'µÄÖµµÄ¸öÊı  
+    string ab_name[DEFINE_COUNT]; //ä»£è¡¨æ­¤'å±æ€§'çš„å€¼
+	string c_lei[DEFINE_COUNT]; //ä»£è¡¨æ­¤'å±æ€§'å€¼çš„ç±»åˆ«
+    int o_num[DEFINE_COUNT+1]; //è®°å½•æ­¤'å±æ€§'ä¸ªæ•°  
+	int g_count; //è®°å½•æ­¤'å±æ€§'çš„å€¼çš„ä¸ªæ•°  
 };   
 struct Entropy entro[DEFINE_COUNT+1]; 
 
 
 
 //****************************************************************************************************************************************
-//********************************************************************/  Ö÷º¯ÊıÈë¿Ú  /****************************************************
+//********************************************************************/  ä¸»å‡½æ•°å…¥å£  /****************************************************
 int main()
 {
      MYSQL mydata;
@@ -92,16 +92,16 @@ int main()
 	 return -1;  }
    
 	 if(NULL!=mysql_real_connect(&mydata,"localhost","root","","cap",3306,NULL,0)){cout << "mysql_real_connect() succeed" << endl;}
-      //ÕâÀïµÄµØÖ·£¬ÓÃ»§Ãû£¬ÃÜÂë£¬¶Ë¿Ú¿ÉÒÔ¸ù¾İ×Ô¼º±¾µØµÄÇé¿ö¸ü¸Ä
+      //è¿™é‡Œçš„åœ°å€ï¼Œç”¨æˆ·åï¼Œå¯†ç ï¼Œç«¯å£å¯ä»¥æ ¹æ®è‡ªå·±æœ¬åœ°çš„æƒ…å†µæ›´æ”¹
  	 else { cout << "mysql_real_connect() failed" << endl;
  	 return -1;  }
 
-     ///*************************************************************************/  Ëæ»úÉú³ÉÊı¾İ  /***************/
+     ///*************************************************************************/  éšæœºç”Ÿæˆæ•°æ®  /***************/
 	 if(FLAG_COUNT)
 	 {
 		  mysql_query(&mydata,"truncate table n_e_w;");
 
-	cout<<"\n\n¿ªÊ¼Ëæ»úÉú³ÉÊı¾İ...\n"; 
+	cout<<"\n\nå¼€å§‹éšæœºç”Ÿæˆæ•°æ®...\n"; 
 		 string sqlstr;   
 		 sqlstr += "insert into n_e_w "; 
 		 sqlstr += "set input=(SELECT c_name FROM concept ORDER BY RAND() LIMIT 1),";
@@ -113,8 +113,8 @@ int main()
 		 sqlstr += "s_three=(SELECT s FROM s_table ORDER BY RAND() LIMIT 1);";
 		 //printf("*********************************************************\n");
 		 for(int t = 0; t < DEFINE_COUNT ; t++)mysql_query(&mydata,sqlstr.c_str());
-	} else{cout<<"Êı¾İ±£³Ö²»±ä..."<<endl;}   
-	 ///*****************************************************************************/  ÁîbeforeÊı¾İÓëinputÏàÍ¬  /*************/
+	} else{cout<<"æ•°æ®ä¿æŒä¸å˜..."<<endl;}   
+	 ///*****************************************************************************/  ä»¤beforeæ•°æ®ä¸inputç›¸åŒ  /*************/
 	 MYSQL_RES *r = NULL;
 	 mysql_query(&mydata,"SELECT input FROM n_e_w");
 	 r = mysql_store_result(&mydata);
@@ -134,14 +134,14 @@ int main()
 				input = mysql_fetch_row(r);
 	 }
 	 mysql_free_result(r);
-	 //**************************************************************************/  »ñµÃÉú³ÉµÄÊı¾İ¼¯´æµ½traindata  /****************/
+	 //**************************************************************************/  è·å¾—ç”Ÿæˆçš„æ•°æ®é›†å­˜åˆ°traindata  /****************/
         MYSQL_RES *result = NULL;
         mysql_query(&mydata,"SELECT * FROM n_e_w");
        
-        result = mysql_store_result(&mydata);//È¡µÃ²¢´òÓ¡ĞĞÊı
+        result = mysql_store_result(&mydata);//å–å¾—å¹¶æ‰“å°è¡Œæ•°
         int rowcount = mysql_num_rows(result);
       
-        unsigned int fieldcount = mysql_num_fields(result);  //È¡µÃ²¢´òÓ¡¸÷×Ö¶ÎµÄÃû³Æ
+        unsigned int fieldcount = mysql_num_fields(result);  //å–å¾—å¹¶æ‰“å°å„å­—æ®µçš„åç§°
 
         MYSQL_ROW row = NULL;
         row = mysql_fetch_row(result);
@@ -152,16 +152,16 @@ int main()
 			 for(int i = 0; i < fieldcount-1; i++)
 			 {
 				traindata[j][i] = row[i];
-				//cout<<"Õû¸ö½á¹û¼¯ÏÔÊ¾£º"<<traindata[j][i] <<"\t";
+				//cout<<"æ•´ä¸ªç»“æœé›†æ˜¾ç¤ºï¼š"<<traindata[j][i] <<"\t";
 			 }	    	 
 			
              row = mysql_fetch_row(result);
 		}	  	
         
-cout<<"\nÊı¾İÒÑ´æ´¢...\n"; 
+cout<<"\næ•°æ®å·²å­˜å‚¨...\n"; 
         //for(int ii=0;ii<DEFINE_COUNT;ii++) cout<<traindata[ii][1]<<endl;
        mysql_free_result(result) ;
-       //***************************************************************************************/   ²éS×´Ì¬±í  ´æÖüÂ·¾¶  /************/
+       //***************************************************************************************/   æŸ¥SçŠ¶æ€è¡¨  å­˜è´®è·¯å¾„  /************/
 
 
         MYSQL mydata_2;
@@ -187,19 +187,19 @@ cout<<"\nÊı¾İÒÑ´æ´¢...\n";
 		row_1 = mysql_fetch_row(result_1); 
 
 		int rowcount_2 = mysql_num_rows(result_2);
-		for(int i = 0;i < rowcount_2; i++) //»ñµÃÆğÊ¼µã£¬ÖÕÖ¹µã£¬·Ö±ğ´æÊı×é
+		for(int i = 0;i < rowcount_2; i++) //è·å¾—èµ·å§‹ç‚¹ï¼Œç»ˆæ­¢ç‚¹ï¼Œåˆ†åˆ«å­˜æ•°ç»„
 		{
 			state_start[i] = row_2[0];
 			state_end[i] = row_1[0];
-			//cout<<"ÆğÊ¼×´Ì¬-> ÖÕÖ¹×´Ì¬"<<state_start[i] <<" -> "<<state_end[i]<<endl;    	   
+			//cout<<"èµ·å§‹çŠ¶æ€-> ç»ˆæ­¢çŠ¶æ€"<<state_start[i] <<" -> "<<state_end[i]<<endl;    	   
 			row_2 = mysql_fetch_row(result_2);
 			row_1 = mysql_fetch_row(result_1);
 		}	  	
         int q=0,fg=1;
 		string aaa[30];
-cout<<"\n×´Ì¬ÆğÊ¼µãÒÑ»ñÈ¡...\n"; 
+cout<<"\nçŠ¶æ€èµ·å§‹ç‚¹å·²è·å–...\n"; 
 		sline = rowcount_2;
-	    for(i=0;i<rowcount_2;i++)//²éÖØºó»ñÈ¡ ÎŞÖØ¸´µÄÆğÊ¼µã->·ÅÈëaaa[]
+	    for(i=0;i<rowcount_2;i++)//æŸ¥é‡åè·å– æ— é‡å¤çš„èµ·å§‹ç‚¹->æ”¾å…¥aaa[]
 		{
 			fg=1;
    		    for(int k=0;k<i;k++){
@@ -209,7 +209,7 @@ cout<<"\n×´Ì¬ÆğÊ¼µãÒÑ»ñÈ¡...\n";
 				aaa[q++]=state_start[i];
 			}
 		}
-		//ÏÔÊ¾ÎŞÖØ¸´Æğµãfor(i=0;i<q;i++)cout<<"-> "<<aaa[i]<<endl;
+		//æ˜¾ç¤ºæ— é‡å¤èµ·ç‚¹for(i=0;i<q;i++)cout<<"-> "<<aaa[i]<<endl;
 
 		
 		for(j=0;j<rowcount_2;j++)
@@ -218,20 +218,20 @@ cout<<"\n×´Ì¬ÆğÊ¼µãÒÑ»ñÈ¡...\n";
 			List[j].end=(char *)state_end[j].c_str();
 		}
 		char *name[50];
-cout<<"\n¿ªÊ¼²éÑ¯×´Ì¬Â·¾¶...\n"; 
+cout<<"\nå¼€å§‹æŸ¥è¯¢çŠ¶æ€è·¯å¾„...\n"; 
 		for ( i=0;i<q;i++ )name[i]=(char *)aaa[i].c_str();
-		for ( i=0;i<q;i++ ) //Ñ­»·Ç¶Ì×²éÂ·¾¶£¬µ÷ÓÃprt_list()º¯Êı
+		for ( i=0;i<q;i++ ) //å¾ªç¯åµŒå¥—æŸ¥è·¯å¾„ï¼Œè°ƒç”¨prt_list()å‡½æ•°
 		{
 			char buf[100];
 			strcpy( buf, name[i] );
 			prt_list( name[i],0, buf );
 		}
-		//Êä³öÊı×éfor( i=0;i<cnt;i++ )cout<<array[i]<<endl;
+		//è¾“å‡ºæ•°ç»„for( i=0;i<cnt;i++ )cout<<array[i]<<endl;
 
-cout<<"\nÒÑ»ñÈ¡Â·¾¶...\n"; 
+cout<<"\nå·²è·å–è·¯å¾„...\n"; 
 	mysql_free_result(result_1); 
 	mysql_free_result(result_2); 
-   //*************************************************************************************************/  ²ã´Î¾ÛÀà·ÖÎö³ö¿Ú  /*************/
+   //*************************************************************************************************/  å±‚æ¬¡èšç±»åˆ†æå‡ºå£  /*************/
 
 
      MYSQL mydata_1;
@@ -245,18 +245,18 @@ cout<<"\nÒÑ»ñÈ¡Â·¾¶...\n";
      ////********************************************************************************************/  
      int p,x; 
      cout<<"\n-------------------------------\n";   
-     cout<<"²ã´Î¾ÛÀà¿ªÊ¼....\n";   
+     cout<<"å±‚æ¬¡èšç±»å¼€å§‹....\n";   
      cout<<"-------------------------------\n";   
-     cout<<"\nÇëÊäÈëÄãÒª·Ö³ÉµÄÀà±ğÊı:    ";  cin>>n;
-	 cout<<"\n·ÖÀàÇø·Ö¶È×Ö·û´®¶ÔÕÕ£º\n[inter]->intersection  [sub]->subClassOf  \n[super]->superClassOf  [equ]->equivalentOf";  
-	 cout<<"\nÇëÊäÈë¼òĞ´£º   ";  cin>>caution;
+     cout<<"\nè¯·è¾“å…¥ä½ è¦åˆ†æˆçš„ç±»åˆ«æ•°:    ";  cin>>n;
+	 cout<<"\nåˆ†ç±»åŒºåˆ†åº¦å­—ç¬¦ä¸²å¯¹ç…§ï¼š\n[inter]->intersection  [sub]->subClassOf  \n[super]->superClassOf  [equ]->equivalentOf";  
+	 cout<<"\nè¯·è¾“å…¥ç®€å†™ï¼š   ";  cin>>caution;
      merge_cnt = 0;
 	 merge_int = 0;
      clock_t begin, end;   
  	 double  cost;
-	 begin = clock(); //¼ÆÊ±º¯Êı¿ªÊ¼
+	 begin = clock(); //è®¡æ—¶å‡½æ•°å¼€å§‹
      int k1;   
-     for(k1=1;k1<=DEFINE_COUNT;k1++)//¾ÛÀàÀà×éµÄ³õÊ¼»¯   
+     for(k1=1;k1<=DEFINE_COUNT;k1++)//èšç±»ç±»ç»„çš„åˆå§‹åŒ–   
      {   
         lei[k1].input = traindata[k1-1][1];   
         lei[k1].output = traindata[k1-1][2];
@@ -270,7 +270,7 @@ cout<<"\nÒÑ»ñÈ¡Â·¾¶...\n";
      }   
      if(n==1)   
      {  
-		 cout<<endl<<"µÚ1¸öÀà¼´È«²¿("<<DEFINE_COUNT<<"Ìõ)£º"<<endl;   
+		 cout<<endl<<"ç¬¬1ä¸ªç±»å³å…¨éƒ¨("<<DEFINE_COUNT<<"æ¡)ï¼š"<<endl;   
          for(int u=1;u<=DEFINE_COUNT;u++)   
          cout<<u<<"\t";   
      }   
@@ -286,14 +286,14 @@ cout<<"\nÒÑ»ñÈ¡Â·¾¶...\n";
 
          char x[3],y[3];
          
-         for(i=1;i<=n;i++) //Àà×éÔªËØÊä³ö     
+         for(i=1;i<=n;i++) //ç±»ç»„å…ƒç´ è¾“å‡º     
 		 {   
-			 printf("\nµÚ%d¸öÀà°üº¬µÄ¼ÇÂ¼(%dÌõ)£º\n",i,lei[i].counter);   
+			 printf("\nç¬¬%dä¸ªç±»åŒ…å«çš„è®°å½•(%dæ¡)ï¼š\n",i,lei[i].counter);   
    
 			 for(j=1;j<=DEFINE_COUNT;j++)   
 			 {   
 				p=lei[i].datenum[j];   
-			    if(p) //½«Àà±ğĞ´»ØÊı¾İ¿âµÄ±íÖĞ  
+			    if(p) //å°†ç±»åˆ«å†™å›æ•°æ®åº“çš„è¡¨ä¸­  
 				{   
 					sprintf(x, "%d", i);
 					sprintf(y, "%d", p);
@@ -317,7 +317,7 @@ cout<<"\nÒÑ»ñÈ¡Â·¾¶...\n";
      printf("\n************************ Time: %lf seconds  ********************\n\n", cost);
 
 
-    //****************************************************************/ ²é³ö·ÖÀàĞÅÏ¢ µ½classify[] /***********/
+    //****************************************************************/ æŸ¥å‡ºåˆ†ç±»ä¿¡æ¯ åˆ°classify[] /***********/
 
 	 string classify[200];
 	 MYSQL_RES *result_4 = NULL;  
@@ -331,34 +331,34 @@ cout<<"\nÒÑ»ñÈ¡Â·¾¶...\n";
 	 for(i = 0;i < mysql_num_rows(result_4); i++)
 	 { 
 		    classify[i] = row_4[0];
-			//cout<<"·ÖÀà¾ßÌåÀà±ğ£º"<<classify[i] <<"\t";    	 
+			//cout<<"åˆ†ç±»å…·ä½“ç±»åˆ«ï¼š"<<classify[i] <<"\t";    	 
 			//printf("*****\n");  
 			row_4 = mysql_fetch_row(result_4);
 	 }	  
-  ///******************************************************************/  ĞÅÏ¢ÔöÒæ³ö¿Ú  /***************/   
-cout<<"\n¿ªÊ¼¼ÆËãĞÅÏ¢ÔöÒæ...\n"; 
+  ///******************************************************************/  ä¿¡æ¯å¢ç›Šå‡ºå£  /***************/   
+cout<<"\nå¼€å§‹è®¡ç®—ä¿¡æ¯å¢ç›Š...\n"; 
 	
      string vv[200];
 	 string str_list[]={"","Input","Output","Before","S_one","After","S_two","S_three"};
 	 for(int zt = 1;zt <= 7; zt++)
 	 {
 		 for(i = 0;i < DEFINE_COUNT; i++) {vv[i] = traindata[i][zt] ;} 
-		 cout<<"ÊôĞÔ"<<str_list[zt]<<"µÄĞÅÏ¢ÔöÒæ£º"<<Entropy_calculate(classify,entro,vv)<<endl;
+		 cout<<"å±æ€§"<<str_list[zt]<<"çš„ä¿¡æ¯å¢ç›Šï¼š"<<Entropy_calculate(classify,entro,vv)<<endl;
 		 memset(entro,0,sizeof(Entropy)*DEFINE_COUNT);
 	 }
 
      mysql_free_result(result_4);
 
-cout<<"\nÑµÁ·Êı¾İ½×¶Îµ½´ËÍê³É...\n\n"; 
+cout<<"\nè®­ç»ƒæ•°æ®é˜¶æ®µåˆ°æ­¤å®Œæˆ...\n\n"; 
 	 return 0;
 }
 
 
 //************************************************************************************************************************************
-                                                        // ¹¦ÄÜº¯Êı //
+                                                        // åŠŸèƒ½å‡½æ•° //
 //************************************************************************************************************************************
 
-//*************************************************************/  ·µ»Ø¼ÇÂ¼"¼ä¾à",·şÎñÓÚMergeº¯Êı  /************/
+//*************************************************************/  è¿”å›è®°å½•"é—´è·",æœåŠ¡äºMergeå‡½æ•°  /************/
 float Record_Distance(string a,string b,MYSQL mydata_1)
 {	
 if(FLAG_HIDDEN)cout<<"record_inside num: "<<++merge_cnt<<"   "<<merge_int<<endl;
@@ -384,7 +384,7 @@ if(FLAG_HIDDEN)cout<<"record_inside num: "<<++merge_cnt<<"   "<<merge_int<<endl;
      row_1 = mysql_fetch_row(result_1);
 
 	 if(!mysql_num_rows(result_1)){aaa="fail";}
-	 else aaa=row_1[0]; //²éµÃ¹ØÏµÌæ´ú´Ê£¬¶ÔÓ¦¸³Öµ  
+	 else aaa=row_1[0]; //æŸ¥å¾—å…³ç³»æ›¿ä»£è¯ï¼Œå¯¹åº”èµ‹å€¼  
 	 if(caution=="inter")
 	 {
 		 if(aaa=="equivalentOf")  k=-1.0;
@@ -421,10 +421,10 @@ if(FLAG_HIDDEN)cout<<"record_inside num: "<<++merge_cnt<<"   "<<merge_int<<endl;
 	return k;
 }	 
 
-//*************************************************************/  ½øĞĞ¾ÛÀà£¬Ã¿´ÎºÏ²¢  /************/
+//*************************************************************/  è¿›è¡Œèšç±»ï¼Œæ¯æ¬¡åˆå¹¶  /************/
 void Merge(struct Leizu lei[DEFINE_COUNT],MYSQL mydata_1)   
 {      
-if(FLAG_HIDDEN)cout<<"\n-------------------¿ªÊ¼¾ÛÀà[function]\n";
+if(FLAG_HIDDEN)cout<<"\n-------------------å¼€å§‹èšç±»[function]\n";
     float **m;   
     m = (float**)malloc((T+1)*sizeof(float*));   
     for(int ii = 0; ii < T+1; ii++ )   
@@ -432,9 +432,9 @@ if(FLAG_HIDDEN)cout<<"\n-------------------¿ªÊ¼¾ÛÀà[function]\n";
         m[ii] = (float*)malloc((T+1)*sizeof(float));   
     }   
    
-    int i,j,i1,j1,st1,st2,p1,p2,p4,p3; //st1£¬st2ÎªÒªºÏ²¢µÄÀà±ğ   
+    int i,j,i1,j1,st1,st2,p1,p2,p4,p3; //st1ï¼Œst2ä¸ºè¦åˆå¹¶çš„ç±»åˆ«   
     double a1,a2,a3,a4,a5,a6,a7,c=0,min;   
-    //½¨Á¢¾àÀë¾àÕó  
+    //å»ºç«‹è·ç¦»è·é˜µ  
     for(i=1;i<=T;i++)   
     {   
         for(j=i;j<=T;j++)   
@@ -447,18 +447,18 @@ if(FLAG_HIDDEN)cout<<"\n-------------------¿ªÊ¼¾ÛÀà[function]\n";
 			a5 = value(lei[i].state1 , lei[j].state1); 
 			a6 = value(lei[i].state2 , lei[j].state2);
 			a7 = value(lei[i].state3 , lei[j].state3);
-            //cout<<"Ç°ºó×´Ì¬¼°¹ØÏµÖµ£º<<lei[i].state1<<" "<<lei[j].state1<<"-> "<<a5<<endl;
-			//cout<<"Ç°ºó×´Ì¬¼°¹ØÏµÖµ£º<<lei[i].state2<<" "<<lei[j].state2<<"-> "<<a6<<endl;
-			//cout<<"Ç°ºó×´Ì¬¼°¹ØÏµÖµ£º<<lei[i].state3<<" "<<lei[j].state3<<"-> "<<a7<<endl;
+            //cout<<"å‰åçŠ¶æ€åŠå…³ç³»å€¼ï¼š<<lei[i].state1<<" "<<lei[j].state1<<"-> "<<a5<<endl;
+			//cout<<"å‰åçŠ¶æ€åŠå…³ç³»å€¼ï¼š<<lei[i].state2<<" "<<lei[j].state2<<"-> "<<a6<<endl;
+			//cout<<"å‰åçŠ¶æ€åŠå…³ç³»å€¼ï¼š<<lei[i].state3<<" "<<lei[j].state3<<"-> "<<a7<<endl;
             c = (-0.5)*float(a1+a2+a3+a4+a5+a6+a7);   
             m[j][i] = c;
             m[i][j] = c;
         }   
      }   
 	 
-     min=m[1][2];/////////////////////////////¡¾¶¯Ì¬µÄ·§Öµ£¬Èç¹û¶¨ËÀ¿ÉÄÜ»áÓĞÓ°Ïì¡¿  
+     min=m[1][2];/////////////////////////////ã€åŠ¨æ€çš„é˜€å€¼ï¼Œå¦‚æœå®šæ­»å¯èƒ½ä¼šæœ‰å½±å“ã€‘  
 	 
-     //²éÕÒ×îĞ¡¾àÀëÀà×é   
+     //æŸ¥æ‰¾æœ€å°è·ç¦»ç±»ç»„   
      for(i1=1;i1<=T;i1++)   
      {   
          for(j1=i1+1;j1<=T;j1++)   
@@ -472,9 +472,9 @@ if(FLAG_HIDDEN)cout<<"\n-------------------¿ªÊ¼¾ÛÀà[function]\n";
 			else continue;
          }   
 	 }   
-     //cout<<"ºÏ²¢µÄÀà×éºÅ£º"<<st1<<" "<<st2<<endl;
+     //cout<<"åˆå¹¶çš„ç±»ç»„å·ï¼š"<<st1<<" "<<st2<<endl;
     
-	 //ºÏ²¢×îĞ¡¾àÀëµÄÀà×é 
+	 //åˆå¹¶æœ€å°è·ç¦»çš„ç±»ç»„ 
      if(st1>=st2)   
      {   
          p1=st1;   
@@ -490,7 +490,7 @@ if(FLAG_HIDDEN)cout<<"\n-------------------¿ªÊ¼¾ÛÀà[function]\n";
 	 lei[st1].state2=lei[st2].state2;
 	 lei[st1].state3=lei[st2].state3;
 	  
-if(FLAG_HIDDEN)cout<<"-------------------ÊıÄ¿ÀÛ¼Ó[function]\n";   
+if(FLAG_HIDDEN)cout<<"-------------------æ•°ç›®ç´¯åŠ [function]\n";   
      for(p2=1;p2<=lei[st2].counter;p2++)   
      {   
          p3++;   
@@ -500,18 +500,18 @@ if(FLAG_HIDDEN)cout<<"-------------------ÊıÄ¿ÀÛ¼Ó[function]\n";
    
      lei[st1].counter=lei[st1].counter+lei[st2].counter;
 	 
-if(FLAG_HIDDEN)cout<<"-------------------¶ÔÏóµ÷Õû[function]\n";
+if(FLAG_HIDDEN)cout<<"-------------------å¯¹è±¡è°ƒæ•´[function]\n";
 
-     for(p4=st2;p4<T;p4++) //Àà×é¶ÔÏóµ÷Õû£¬ºóÃæÁô³ö¿ÕÎ»   
+     for(p4=st2;p4<T;p4++) //ç±»ç»„å¯¹è±¡è°ƒæ•´ï¼Œåé¢ç•™å‡ºç©ºä½   
      {   
-		 //cout<<"Àà×é¶ÔÏóµ÷Õû£º"<<p4<<" "<<p4+1<<" "<<T<<endl;
+		 //cout<<"ç±»ç»„å¯¹è±¡è°ƒæ•´ï¼š"<<p4<<" "<<p4+1<<" "<<T<<endl;
          lei[p4]=lei[p4+1]; 
 		 
      } 
 
 	for(i=0;i<T+1;i++){ free(m[i]);}
     free(m); 
-if(FLAG_HIDDEN)cout<<"-------------------¾ÛÀàÍê³É[function]\n";      
+if(FLAG_HIDDEN)cout<<"-------------------èšç±»å®Œæˆ[function]\n";      
 }   
 	
 
@@ -519,7 +519,7 @@ if(FLAG_HIDDEN)cout<<"-------------------¾ÛÀàÍê³É[function]\n";
 
 
 
-//*********************************************************************/ S×´Ì¬Â·¾¶£¬·µ»Ø¼ÆËãÖµ /****************/
+//*********************************************************************/ SçŠ¶æ€è·¯å¾„ï¼Œè¿”å›è®¡ç®—å€¼ /****************/
 int abc(char *s,string a)
 {
 	char *str = new char[strlen(s)+1];
@@ -530,7 +530,7 @@ int abc(char *s,string a)
     while (sPtr != NULL) {
         ++i;
         if ( strcmp(sPtr,a.substr(1).c_str()) == 0) {
-            //cout <<"¾àÀëÆğÊ¼µã¼ä¸ô£º"<<i<<endl;
+            //cout <<"è·ç¦»èµ·å§‹ç‚¹é—´éš”ï¼š"<<i<<endl;
 			 delete []str; return i; 
         }
 		
@@ -560,14 +560,14 @@ int find_next( char *start, int flag )
 
 void prt_list( char *name,int n, char *str_list )
 {
-    if ( n >= 4 )  //ÕâÀïÈç¹û4±äµÄÔ½´ó£¬ÖØ¸´ĞÔÔ½¶à
+    if ( n >= 4 )  //è¿™é‡Œå¦‚æœ4å˜çš„è¶Šå¤§ï¼Œé‡å¤æ€§è¶Šå¤š
     {
-        //cout<<"Êä³öÕûÂ·¾¶£º"<<str_list<<endl;
+        //cout<<"è¾“å‡ºæ•´è·¯å¾„ï¼š"<<str_list<<endl;
         strcpy( array[cnt++], str_list ); 
         return ;
     }
     int flag=0;
-    for( flag=0;;flag++) //ÕÒÏàÓ¦µÄºó¼Ì½áµã£¬µ±Ç°¸ù¾İÇé¿ö£¬Éè¶¨ÎªÁ½¸ö
+    for( flag=0;;flag++) //æ‰¾ç›¸åº”çš„åç»§ç»“ç‚¹ï¼Œå½“å‰æ ¹æ®æƒ…å†µï¼Œè®¾å®šä¸ºä¸¤ä¸ª
     {
         int i=find_next( name,flag );
         char buf[100];
@@ -578,18 +578,18 @@ void prt_list( char *name,int n, char *str_list )
             break;
         }
         sprintf( buf, "%s%s", str_list,List[i].end  );
-        prt_list( List[i].end,n+1, buf ); //Êä³öºó¼Ì
+        prt_list( List[i].end,n+1, buf ); //è¾“å‡ºåç»§
     }
 }
 
 
 float value(string a,string b)
 {
-//cout<<"-------------------¼ÆËã×´Ì¬¹ØÏµÖµ[function]\n"; 
+//cout<<"-------------------è®¡ç®—çŠ¶æ€å…³ç³»å€¼[function]\n"; 
 	if(a==b)return 1;
 	else
 	{
-		//cout<<"Éú³ÉÂ·¾¶µÄÌõÊı£º"<<cnt<<endl;
+		//cout<<"ç”Ÿæˆè·¯å¾„çš„æ¡æ•°ï¼š"<<cnt<<endl;
 		int mm[20],p=0;
 		for(int i=0;i<cnt;i++)
 		{
@@ -612,7 +612,7 @@ float value(string a,string b)
 
 
 
-//************************************************************************************/  ¼ÆËã½ÚµãµÄìØ£¬º¬¼ÆËãÊôĞÔµÄìØ  /************/
+//************************************************************************************/  è®¡ç®—èŠ‚ç‚¹çš„ç†µï¼Œå«è®¡ç®—å±æ€§çš„ç†µ  /************/
 float Entropy_calculate(string classify[200],struct Entropy entro[DEFINE_COUNT],string array[200])
 {
 	int p = 2,b=0;
@@ -623,17 +623,17 @@ float Entropy_calculate(string classify[200],struct Entropy entro[DEFINE_COUNT],
 		entro[k1].c_lei[1] = classify[k1];
 		entro[k1].g_count = 1;
 	}
-	for(int i = 0; i < DEFINE_COUNT; i++) //Ñ­»·Ã¿Ìõ¼ÇÂ¼ÕÒÍ¬Àà
+	for(int i = 0; i < DEFINE_COUNT; i++) //å¾ªç¯æ¯æ¡è®°å½•æ‰¾åŒç±»
 	{
 		for(int j = i+1; j < DEFINE_COUNT; j++)
 		{
-			if(entro[i].ab_name[1] == entro[j].ab_name[1])//ºÏ²¢¼ÇÂ¼ »ñµÃÊôĞÔ
+			if(entro[i].ab_name[1] == entro[j].ab_name[1])//åˆå¹¶è®°å½• è·å¾—å±æ€§
 			{
 				entro[i].ab_name[p] = entro[j].ab_name[1];
 				entro[i].o_num[p] = entro[j].o_num[1];
 				entro[i].c_lei[p] = entro[j].c_lei[1];
 				entro[i].g_count += entro[j].g_count; 
-				for(int k = j; k < DEFINE_COUNT; k++)//ÌÚ³ö¿Õ¼ä
+				for(int k = j; k < DEFINE_COUNT; k++)//è…¾å‡ºç©ºé—´
 				{
 					entro[k].ab_name[1] = entro[k+1].ab_name[1];
 					entro[k].o_num[1] = entro[k+1].o_num[1];
@@ -646,15 +646,15 @@ float Entropy_calculate(string classify[200],struct Entropy entro[DEFINE_COUNT],
 	    p = 2;
 	}
 
-    for(i = 0;i < DEFINE_COUNT;i++){if(entro[i].g_count)b++;}//µÃµ½ÊôĞÔÊıÄ¿
-	//cout<<"¿É»®·ÖÊôĞÔµÄ¸öÊı£º"<<b<<endl;
+    for(i = 0;i < DEFINE_COUNT;i++){if(entro[i].g_count)b++;}//å¾—åˆ°å±æ€§æ•°ç›®
+	//cout<<"å¯åˆ’åˆ†å±æ€§çš„ä¸ªæ•°ï¼š"<<b<<endl;
    
 	int flag = 1,count = 0;
 	
 
 	float all_value = 0;
-	/////////////////////////////////////////////¼ÆËã¡¤ÊôĞÔµÄ¡¤ìØ
-if(FLAG_HIDDEN)cout<<"-------------------µÃµ½ÊôĞÔµÄìØ[function]\n"; 
+	/////////////////////////////////////////////è®¡ç®—Â·å±æ€§çš„Â·ç†µ
+if(FLAG_HIDDEN)cout<<"-------------------å¾—åˆ°å±æ€§çš„ç†µ[function]\n"; 
     for(i = 0 ; i < b ; i ++)
 	{ 
 		float adder = 0;
@@ -666,43 +666,43 @@ if(FLAG_HIDDEN)cout<<"-------------------µÃµ½ÊôĞÔµÄìØ[function]\n";
 			{				
 				count=0;flag=1;
 				for(int k = 1;k < j; k++){
-				        //cout<<entro[i].c_lei[j]<<"  ²éÖØ  "<<entro[i].c_lei[k]<<endl;
+				        //cout<<entro[i].c_lei[j]<<"  æŸ¥é‡  "<<entro[i].c_lei[k]<<endl;
 						if(j!=0 && entro[i].c_lei[j]==entro[i].c_lei[k]) flag = 0;					 
 				}
-				//cout<<"²éÖØ±êÖ¾Î»£º"<<flag<<endl;
+				//cout<<"æŸ¥é‡æ ‡å¿—ä½ï¼š"<<flag<<endl;
                 if(flag){ 
 					for(int p = j;p <= size; p++){
-						//cout<<entro[i].c_lei[p]<<"  ¼ÆÊı  "<<entro[i].c_lei[j]<<endl;
+						//cout<<entro[i].c_lei[p]<<"  è®¡æ•°  "<<entro[i].c_lei[j]<<endl;
 						if(entro[i].c_lei[p]==entro[i].c_lei[j]) count++;
 					}
 				
 					if(count==0) adder = 0;
 					else{
-						//cout<<"ÊôĞÔÖĞ¸öÊı£º"<<size<<endl;
-						//cout<<"±¾´ÎµÄÍ¬Àà£º"<<count<<endl;
-						//cout<<"·ÖÊ½ÖĞ¼äÊ½£º"<<(float)count/size<<endl;
-						//cout<<"¶ÔÊı·ÖÊ½Öµ£º"<<(log((float)count/size)/log(2))<<endl;
+						//cout<<"å±æ€§ä¸­ä¸ªæ•°ï¼š"<<size<<endl;
+						//cout<<"æœ¬æ¬¡çš„åŒç±»ï¼š"<<count<<endl;
+						//cout<<"åˆ†å¼ä¸­é—´å¼ï¼š"<<(float)count/size<<endl;
+						//cout<<"å¯¹æ•°åˆ†å¼å€¼ï¼š"<<(log((float)count/size)/log(2))<<endl;
 						adder +=  (float)count/size *(log((float)count/size)/log(2));
-						//cout<<"Ã¿´ÎµÄ½á¹û£º"<<adder<<endl;
+						//cout<<"æ¯æ¬¡çš„ç»“æœï¼š"<<adder<<endl;
 						 		
 					}
 				}
 			}
 		}
-if(FLAG_HIDDEN)cout<<"-------------------µÃµ½½ÚµãµÄìØ[function]\n"; 
+if(FLAG_HIDDEN)cout<<"-------------------å¾—åˆ°èŠ‚ç‚¹çš„ç†µ[function]\n"; 
 		float m = (float)entro[i].g_count/DEFINE_COUNT;
-		//cout<<"´ËÊôĞÔ¸ÅÂÊ£º"<<m<<endl;
+		//cout<<"æ­¤å±æ€§æ¦‚ç‡ï¼š"<<m<<endl;
 		all_value += float(m*adder);
-		//cout<<"ÏîÀÛ¼ÓµÃìØ£º"<<all_value<<endl;
+		//cout<<"é¡¹ç´¯åŠ å¾—ç†µï¼š"<<all_value<<endl;
 	}
-    //cout<<"×îÖÕÀàµÄìØ£º"<<S_Value(classify)<<endl;
+    //cout<<"æœ€ç»ˆç±»çš„ç†µï¼š"<<S_Value(classify)<<endl;
 
-if(FLAG_HIDDEN)cout<<"-------------------·µ»Ø½ÚµãµÄĞÅÏ¢ÔöÒæ[function]\n";  
-return S_Value(classify)+all_value;//µÃµ½ĞÅÏ¢ÔöÒæ
+if(FLAG_HIDDEN)cout<<"-------------------è¿”å›èŠ‚ç‚¹çš„ä¿¡æ¯å¢ç›Š[function]\n";  
+return S_Value(classify)+all_value;//å¾—åˆ°ä¿¡æ¯å¢ç›Š
 }
 
 
-//***********************************************************************/  ¼ÆËã'Àà±ğ'µÄìØ£¬·şÎñÓÚEntropy_calculate /******************/
+//***********************************************************************/  è®¡ç®—'ç±»åˆ«'çš„ç†µï¼ŒæœåŠ¡äºEntropy_calculate /******************/
 float S_Value(string classify[200])
 {
 	int num=0,flag;
@@ -716,7 +716,7 @@ float S_Value(string classify[200])
 		if(flag)num++;
 
 	}
-	//cout<<"·ÖÀàÊıÄ¿£º"<<num<<endl;
+	//cout<<"åˆ†ç±»æ•°ç›®ï¼š"<<num<<endl;
 
     float s_value=0;
 	
@@ -729,13 +729,13 @@ float S_Value(string classify[200])
 		{
 			if(b == classify[j])count++;
 		}
-		//cout<<"×îÖÕÖĞÏî£º"<<(float)count/DEFINE_COUNT<<endl;
-	    //cout<<"¶ÔÊıÊ½Öµ£º"<<log((float)count/DEFINE_COUNT)/log(2)<<endl;
-		//cout<<"ÖĞ¼ä³Ë»ı£º"<<((float)count/DEFINE_COUNT)*(log((float)count/DEFINE_COUNT)/log(2))<<endl;
+		//cout<<"æœ€ç»ˆä¸­é¡¹ï¼š"<<(float)count/DEFINE_COUNT<<endl;
+	    //cout<<"å¯¹æ•°å¼å€¼ï¼š"<<log((float)count/DEFINE_COUNT)/log(2)<<endl;
+		//cout<<"ä¸­é—´ä¹˜ç§¯ï¼š"<<((float)count/DEFINE_COUNT)*(log((float)count/DEFINE_COUNT)/log(2))<<endl;
 		s_value += ((float)count/DEFINE_COUNT)*(log((float)count/DEFINE_COUNT)/log(2));
 		
 	}
-if(FLAG_HIDDEN)cout<<"-------------------µÃµ½Àà±ğµÄìØ[function]\n"; 
+if(FLAG_HIDDEN)cout<<"-------------------å¾—åˆ°ç±»åˆ«çš„ç†µ[function]\n"; 
     s_value = (-1)*s_value;
 	return s_value;
 
