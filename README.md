@@ -1,5 +1,5 @@
 # WebserviceCombine
-Simulation verification experiment for Webservice Combine.
+This is an important research point in the service-oriented software engineering. It develops a web service aggregation platform based on the join operation in relational database (RDB).
 ## Processing
 Firstly, it uses the self-join operation in RDB to cluster service to form different service clusters. <br>
 Then it organizes different service clusters in further according to the service execution dependency relationship, and thus to realize service aggregation. 
